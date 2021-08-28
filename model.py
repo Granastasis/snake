@@ -4,7 +4,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import os
 
-class Linear_QNet(nn.Module):
+class LinearQNet(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
         self.linear1 = nn.Linear(input_size, hidden_size)
@@ -52,15 +52,15 @@ class QTrainer:
 
         target = pred.clone()
         for idx in range(len(done)):
-            Q_new = reward[idx]
+            QΝew = reward[idx]
             if not done[idx]:
-                Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+                QΝew = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
 
-            target[idx][torch.argmax(action[idx]).item()] = Q_new
+            target[idx][torch.argmax(action[idx]).item()] = QΝew
     
-        # 2: Q_new = r + y * max(next_predicted Q value) -> only do this if not done
+        # 2: QΝew = r + y * max(next_predicted Q value) -> only do this if not done
         # pred.clone()
-        # preds[argmax(action)] = Q_new
+        # preds[argmax(action)] = QΝew
         self.optimizer.zero_grad()
         loss = self.criterion(target, pred)
         loss.backward()
